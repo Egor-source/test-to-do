@@ -1,0 +1,41 @@
+services:
+  neo4j:
+    image: neo4j:4.4
+    container_name: neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./docker_data/neo4j-data:/data
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./back:/app
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - neo4j
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ./front:/app
+    ports:
+      - "8080:8080"
+    command: sh -c "npm install && npm run serve"
+    depends_on:
+      - backend
+
+volumes:
+  neo4j-data:
+    driver: local
