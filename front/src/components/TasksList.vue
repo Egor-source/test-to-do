@@ -6,9 +6,7 @@
       <button type="submit">Add Task</button>
     </form>
     <ul>
-      <li v-for="task in tasks" :key="task.id">
-        <TaskItem :task="task" @task-deleted="taskDeleted"/>
-      </li>
+      <TaskItem v-for="task in tasks" :key="task.id" :task="task" @task-deleted="taskDeleted"/>
     </ul>
   </div>
 </template>
